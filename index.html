@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="RBI Daily">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#f7f5f1">
+<title>RBI Grade B · Daily Votes</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f5f1;--card:#fff;--ink:#222;--mute:#8a8782;--line:#e8e5df;--a:#f0b35a;--b:#c56be8;--dark:#232323;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#181715;--card:#22211f;--ink:#f2efe9;--mute:#9a968f;--line:#33312e;--dark:#f2efe9}}
+:root[data-theme=dark]{--bg:#181715;--card:#22211f;--ink:#f2efe9;--mute:#9a968f;--line:#33312e;--dark:#f2efe9}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 Inter,system-ui,sans-serif}
+.serif{font-family:Newsreader,Georgia,serif}
+main{max-width:520px;margin:0 auto;padding:18px 18px 130px}
+h1,h2{font-family:Newsreader,Georgia,serif;font-weight:500;margin:0}
+h1{font-size:30px}h2{font-size:22px;margin:22px 0 10px}
+.mute{color:var(--mute);font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:18px;margin:12px 0}
+.btn{border:0;border-radius:99px;background:var(--dark);color:var(--bg);font:600 16px Inter;padding:14px 26px;cursor:pointer}
+.btn.ghost{background:var(--line);color:var(--ink)}
+.blob{background:linear-gradient(150deg,#f7d89c,var(--a));border-radius:46% 54% 42% 58%/52% 44% 56% 48%;padding:34px 24px;text-align:center;color:#222;position:relative;margin:16px 0}
+.blob.done .t{text-decoration:line-through}
+.blob .t{font:500 30px Newsreader,serif}
+.streak{position:absolute;top:-8px;right:-4px;background:#fff;border-radius:30px;padding:10px 14px;font-weight:600;box-shadow:0 6px 18px #0002;color:#222}
+.grad{background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+nav{position:fixed;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));max-width:492px;margin:auto;background:var(--card);border:1px solid var(--line);border-radius:40px;display:flex;padding:8px;gap:4px;box-shadow:0 10px 30px #0002;z-index:5}
+nav button{flex:1;border:0;background:none;color:var(--ink);font:500 12px Inter;padding:10px 0;border-radius:30px;cursor:pointer}
+nav button.on{background:var(--line)}nav b{display:block;font-size:18px}
+.bar{height:8px;background:var(--line);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--a),var(--b))}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.chk{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.chk:last-child{border:0}
+.dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--mute);flex:none}
+.chk.on .dot{background:linear-gradient(135deg,var(--a),var(--b));border-color:transparent}.chk.on span{color:var(--mute);text-decoration:line-through}
+select,input{width:100%;font:16px Inter;padding:13px 14px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.timer{font:600 84px Inter;text-align:center;letter-spacing:-2px;margin:26px 0 18px}
+.pill{display:inline-block;padding:6px 12px;border-radius:99px;background:var(--line);margin:3px 3px 0 0;font-size:13px;cursor:pointer}
+.pill.on{background:var(--dark);color:var(--bg)}
+.toast{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:var(--dark);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:600;z-index:9}
+.overflow{overflow-x:auto}
+</style></head><body><main id="app"></main>
+<nav id="nav"></nav>
+<script>
+const SUBJ={
+"Phase 1":{"Reasoning":["Puzzles & seating","Syllogism","Inequalities","Blood relations & direction","Coding-decoding","Data sufficiency","Input-output"],
+"General Awareness":["RBI & banking basics","Monetary policy","Budget & Economic Survey","Static GK","Awards, summits, sports"],
+"Current Affairs":["Banking & RBI news","Economy data & reports","Government schemes","International organisations","Monthly revision"],
+"Quant":["Data interpretation","Number series","Simplification","Percentage & ratio","Profit, loss, SI/CI","Time, work, speed","Probability & P&C"],
+"English":["Reading comprehension","Cloze test","Error spotting","Para jumbles","Vocabulary"]},
+"Phase 2":{"Finance":["Financial system & markets","Financial institutions & regulators","Risk management & Basel","Fiscal policy & public finance","Corporate finance & ratios","Derivatives & forex","Financial inclusion & fintech"],
+"Management":["Motivation theories","Leadership","Organisational structure","HRM","Strategy","Communication","Ethics & CSR"],
+"ESI":["Growth & development","Inflation & monetary policy","Indian economy sectors","Poverty & employment","Globalisation & BoP","Demography & social structure","Education & health"],
+"English (Desc.)":["Essay writing","Précis","Comprehension","Letter & report writing"]},
+"Interview":{"Interview":["DAF & profile","Economy opinions","RBI knowledge","Current issues","Mock interviews"]}};
+const NUDGE=["One focused session beats a long plan. Start with 25 minutes.","Every session is a vote for the officer you are becoming.","Revise yesterday's topic for 5 minutes before starting anything new.","Two hard subjects, one easy one. Balance your day.","Phone away, timer on. That is the whole trick.","Read one editorial today. Current affairs compounds.","Mock test today? Analyse it for twice as long as you took it.","Small and daily beats big and rare. Cast today's vote.","Write down one thing you learned. Teaching yourself locks it in.","Missed yesterday? Don't restart the story, just cast today's vote."];
+const ALL=Object.values(SUBJ).flatMap(p=>Object.keys(p));
+const K="rbi_atoms_v1";
+let S={ident:"an RBI Grade B officer who understands the economy and shows up every day",exam:"",done:{},logs:[],voted:{},mocks:[],custom:{}};
+try{Object.assign(S,JSON.parse(localStorage.getItem(K)||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const $=s=>document.querySelector(s);
+const ds=d=>{d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const today=()=>ds();
+let tab="home",T={subj:ALL[0],mins:25,left:25*60,run:false,end:0,iv:null,start:0};
+function toast(m){const t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),1800)}
+function streak(){let n=0,d=new Date();if(!S.voted[ds(d)])d.setDate(d.getDate()-1);while(S.voted[ds(d)]){n++;d.setDate(d.getDate()-1)}return n}
+function best(){const k=Object.keys(S.voted).sort();let b=0,c=0,p=null;for(const x of k){c=p&&(new Date(x)-new Date(p))==864e5?c+1:1;b=Math.max(b,c);p=x}return b}
+function vote(){S.voted[today()]=1;save()}
+const mins=(f)=>S.logs.filter(f).reduce((a,l)=>a+l.min,0);
+const fmt=m=>m>=60?Math.floor(m/60)+"h "+(m%60)+"m":m+"m";
+function tops(sub){return (Object.values(SUBJ).find(p=>p[sub])||{})[sub].concat(S.custom[sub]||[])}
+function pct(sub){const t=tops(sub);return t.length?Math.round(t.filter(x=>S.done[sub+"|"+x]).length/t.length*100):0}
+function suggest(){const wk=new Date();wk.setDate(wk.getDate()-6);const w=ds(wk);return ALL.map(s=>[s,mins(l=>l.sub==s&&l.d>=w)]).sort((a,b)=>a[1]-b[1])[0][0]}
+function days(){if(!S.exam)return null;return Math.ceil((new Date(S.exam)-new Date(today()))/864e5)}
+
+function home(){const v=!!S.voted[today()],n=streak(),dd=days(),tm=mins(l=>l.d==today());
+const nudge=NUDGE[Math.floor(new Date()/864e5)%NUDGE.length],sg=suggest();
+return `<div class="row"><h1>Today</h1><span class="mute">${new Date().toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short"})}</span></div>
+<div class="blob ${v?"done":""}" onclick="castVote()"><div class="streak">⚡ ${n}</div><div class="t">Study session</div><div class="mute" style="color:#5a4a2a">I want to become</div><div class="serif" style="font-size:22px;line-height:1.2;margin:4px 0 14px">${S.ident}</div><button class="btn" style="background:#fff;color:#222">${v?"Voted today ✓":"Cast today's vote"}</button></div>
+<div class="card"><div class="mute">Daily nudge</div><div class="serif" style="font-size:21px;margin:6px 0 12px">${nudge}</div><div class="mute">Suggested today: <b style="color:var(--ink)">${sg}</b> (least studied this week)</div><div style="margin-top:12px"><button class="btn" onclick="T.subj='${sg}';go('focus')">Focus on ${sg}</button></div></div>
+<div class="card row"><div><div class="mute">Studied today</div><div class="serif" style="font-size:28px">${fmt(tm)}</div></div><div style="text-align:right"><div class="mute">Days to exam</div><div class="serif" style="font-size:28px">${dd==null?"—":dd}</div></div></div>
+<div class="card"><div class="mute" style="margin-bottom:6px">Exam date</div><input type="date" value="${S.exam}" onchange="S.exam=this.value;save();render()"><div class="mute" style="margin:14px 0 6px">Identity statement: I want to become…</div><input value="${S.ident.replace(/"/g,"&quot;")}" onchange="S.ident=this.value;save();render()"></div>`}
+function castVote(){if(S.voted[today()])return toast("Already voted today");vote();toast("Vote cast ⚡");render()}
+
+function study(){let h=`<h1>Syllabus</h1><p class="mute">Tap a topic when you finish it.</p>`;
+for(const [ph,subs] of Object.entries(SUBJ)){h+=`<h2>${ph}</h2>`;for(const s of Object.keys(subs)){const p=pct(s);
+h+=`<details class="card"><summary class="row" style="list-style:none;cursor:pointer"><span class="serif" style="font-size:19px">${s}</span><span class="mute">${p}%</span></summary><div class="bar" style="margin:10px 0"><i style="width:${p}%"></i></div>`+
+tops(s).map((t,i)=>`<div class="chk ${S.done[s+"|"+t]?"on":""}" onclick="tg('${s}','${t.replace(/'/g,"\\'")}')"><div class="dot"></div><span>${t}</span></div>`).join("")+
+`<div style="margin-top:10px"><input placeholder="Add a topic and press Enter" onkeydown="if(event.key=='Enter'&&this.value.trim()){(S.custom['${s}']=S.custom['${s}']||[]).push(this.value.trim());save();render()}"></div></details>`}}
+return h}
+function tg(s,t){const k=s+"|"+t;S.done[k]?delete S.done[k]:S.done[k]=1;save();const o=[...document.querySelectorAll("details")].map(d=>d.open);render();document.querySelectorAll("details").forEach((d,i)=>d.open=o[i])}
+
+function focus(){const m=Math.floor(T.left/60),s=T.left%60;
+return `<h1>Focus</h1><div class="card" style="border-radius:46% 54% 42% 58%/12% 12% 12% 12%;padding:26px 18px"><div class="timer grad" id="tm">${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}</div>
+<div style="text-align:center"><button class="btn" onclick="tgl()">${T.run?"Pause":(T.left<T.mins*60?"Resume":"Start")}</button> ${T.left<T.mins*60||T.run?`<button class="btn ghost" onclick="stopT()">Finish</button>`:""}</div></div>
+<div class="card"><div class="mute" style="margin-bottom:8px">Subject</div><select onchange="T.subj=this.value" ${T.run?"disabled":""}>${Object.entries(SUBJ).map(([p,x])=>`<optgroup label="${p}">${Object.keys(x).map(s=>`<option ${s==T.subj?"selected":""}>${s}</option>`).join("")}</optgroup>`).join("")}</select>
+<div class="mute" style="margin:14px 0 4px">Length</div>${[15,25,45,60].map(x=>`<span class="pill ${T.mins==x?"on":""}" onclick="setLen(${x})">${x} min</span>`).join("")}
+<p class="mute">A finished session logs your study time and casts today's vote automatically.</p></div>`}
+function setLen(x){if(T.run)return;T.mins=x;T.left=x*60;render()}
+function tick(){T.left=Math.max(0,Math.round((T.end-Date.now())/1000));const e=$("#tm");if(e)e.textContent=String(Math.floor(T.left/60)).padStart(2,"0")+":"+String(T.left%60).padStart(2,"0");if(T.left<=0){beep();stopT(true)}}
+function tgl(){if(T.run){clearInterval(T.iv);T.run=false}else{T.end=Date.now()+T.left*1000;T.run=true;T.iv=setInterval(tick,250);try{navigator.wakeLock&&navigator.wakeLock.request("screen")}catch(e){}}render()}
+function stopT(full){clearInterval(T.iv);T.run=false;const done=Math.round((T.mins*60-T.left)/60);
+if(full===true||done>=1){S.logs.push({d:today(),sub:T.subj,min:full===true?T.mins:done});vote();toast(`Logged ${full===true?T.mins:done} min · vote cast ⚡`)}
+T.left=T.mins*60;render()}
+function beep(){try{navigator.vibrate&&navigator.vibrate([300,150,300]);const c=new AudioContext(),o=c.createOscillator();o.connect(c.destination);o.frequency.value=660;o.start();o.stop(c.currentTime+.4)}catch(e){}}
+
+function prog(){const tot=S.logs.reduce((a,l)=>a+l.min,0),votes=Object.keys(S.voted).length;
+const per=ALL.map(s=>[s,mins(l=>l.sub==s)]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]),mx=per[0]?per[0][1]:1;
+const all=ALL.flatMap(s=>tops(s).map(t=>S.done[s+"|"+t]?1:0)),over=Math.round(all.reduce((a,b)=>a+b,0)/all.length*100);
+const ms=S.mocks.slice(-12),pts=ms.map((m,i)=>[ms.length>1?20+i*(260/(ms.length-1)):150,100-(m.score/m.max*80)]);
+return `<h1>Progress</h1>
+<div class="card"><div class="mute">Total votes</div><div class="serif" style="font-size:44px">${votes}</div><div class="mute">Study time ${fmt(tot)} · streak ${streak()} · best ${best()}${L.length?` · ${L.filter(d=>d.status=="Done").length}/${L.length} files read`:""}</div></div>
+<div class="card"><div class="row"><span class="mute">Syllabus complete</span><b>${over}%</b></div><div class="bar" style="margin-top:8px"><i style="width:${over}%"></i></div></div>
+<div class="card"><div class="mute" style="margin-bottom:8px">Time per subject</div>${per.length?per.map(([s,m])=>`<div style="margin:9px 0"><div class="row"><span>${s}</span><span class="mute">${fmt(m)}</span></div><div class="bar"><i style="width:${m/mx*100}%"></i></div></div>`).join(""):`<span class="mute">Finish a focus session to see this.</span>`}</div>
+<div class="card"><div class="mute" style="margin-bottom:8px">Mock tests</div>
+${ms.length?`<svg viewBox="0 0 300 110" style="width:100%"><defs><linearGradient id="g"><stop offset="0" stop-color="#f0b35a"/><stop offset="1" stop-color="#c56be8"/></linearGradient></defs><polyline fill="none" stroke="url(#g)" stroke-width="3" stroke-linecap="round" points="${pts.map(p=>p.join(",")).join(" ")}"/>${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#c56be8"/>`).join("")}</svg><div class="mute">Latest: ${ms[ms.length-1].sub} ${ms[ms.length-1].score}/${ms[ms.length-1].max}</div>`:`<span class="mute">No mocks logged yet.</span>`}
+<div style="margin-top:12px"><select id="ms">${ALL.concat(["Full mock"]).map(s=>`<option>${s}</option>`).join("")}</select></div>
+<div class="row" style="margin-top:8px"><input id="sc" type="number" placeholder="Score"><input id="mx" type="number" placeholder="Out of" value="100"></div>
+<div style="margin-top:10px"><button class="btn" onclick="addMock()">Save mock score</button></div></div>
+<div class="card"><div class="mute" style="margin-bottom:8px">Backup</div><button class="btn ghost" onclick="exp()">Copy data</button> <button class="btn ghost" onclick="imp()">Restore data</button></div>`}
+function addMock(){const s=+$("#sc").value,m=+$("#mx").value;if(!m||isNaN(s))return toast("Enter score and total");S.mocks.push({d:today(),sub:$("#ms").value,score:s,max:m});save();toast("Mock saved");render()}
+function exp(){const j=JSON.stringify(S);(navigator.clipboard?navigator.clipboard.writeText(j):Promise.reject()).then(()=>toast("Copied. Paste it somewhere safe"),()=>prompt("Copy your data:",j))}
+function imp(){const j=prompt("Paste backup data:");if(!j)return;try{S=Object.assign(S,JSON.parse(j));save();toast("Restored");render()}catch(e){toast("That backup is not valid")}}
+
+
+/* ---------- Library ---------- */
+let L=[],Lready=false,LF="All";
+const DB=()=>new Promise((res,rej)=>{const r=indexedDB.open("rbi_lib",1);r.onupgradeneeded=()=>r.result.createObjectStore("f",{keyPath:"id"});r.onsuccess=()=>res(r.result);r.onerror=()=>rej()});
+const dbAll=async()=>{const d=await DB();return new Promise(r=>{const q=d.transaction("f").objectStore("f").getAll();q.onsuccess=()=>r(q.result)})};
+const dbPut=async o=>{const d=await DB();return new Promise(r=>{const t=d.transaction("f","readwrite");t.objectStore("f").put(o);t.oncomplete=r})};
+const dbDel=async id=>{const d=await DB();return new Promise(r=>{const t=d.transaction("f","readwrite");t.objectStore("f").delete(id);t.oncomplete=r})};
+const esc=x=>x.replace(/[<>&"]/g,c=>"&#"+c.charCodeAt(0)+";");
+const kind=d=>/pdf/i.test(d.type+d.name)?"pdf":/^image/.test(d.type)?"img":"txt";
+function lib(){
+if(!Lready){dbAll().then(x=>{L=x;Lready=true;render()}).catch(()=>{Lready=true;render()});return `<h1>Library</h1><p class="mute">Loading…</p>`}
+const list=L.filter(d=>LF=="All"||d.sub==LF).sort((a,b)=>b.id-a.id);
+return `<h1>Library</h1><p class="mute">Add PDFs, photos of notes, or text files. They stay on this phone.</p>
+<div class="card"><div class="mute" style="margin-bottom:6px">Add to subject</div><select id="lsub">${ALL.concat(["General"]).map(s=>`<option ${s==LS?"selected":""}>${s}</option>`).join("")}</select>
+<label class="btn" style="display:block;text-align:center;margin-top:12px">Add files<input type="file" multiple accept=".pdf,.txt,.md,image/*" hidden onchange="addFiles(this.files)"></label></div>
+<select onchange="LF=this.value;render()">${["All"].concat(ALL,["General"]).map(s=>`<option ${s==LF?"selected":""}>${s}</option>`).join("")}</select>
+${list.length?list.map(d=>{const p=d.status=="Done"?100:d.total?Math.min(100,Math.round(d.pages/d.total*100)):0;return `<div class="card"><div class="row"><b style="word-break:break-word">${esc(d.name)}</b><span class="pill">${d.sub}</span></div><div class="mute">${d.status}${d.total?` · ${d.pages}/${d.total} pages`:""}</div><div class="bar" style="margin:8px 0"><i style="width:${p}%"></i></div><div class="row"><button class="btn" onclick="openDoc(${d.id})">Read</button><button class="btn ghost" onclick="delDoc(${d.id})">Delete</button></div></div>`}).join(""):`<div class="card mute">Nothing here yet. Add your first handout or short notes above.</div>`}`}
+let LS=ALL[0];
+async function addFiles(fs){LS=$("#lsub").value;let n=0;for(const f of fs){if(!/pdf|image|text|markdown/i.test(f.type)&&!/\.(pdf|txt|md)$/i.test(f.name)){toast("Skipped "+f.name+" (use PDF, image or text)");continue}
+const d={id:Date.now()+n++,name:f.name,type:f.type,sub:LS,status:"To read",pages:0,total:0,added:today(),blob:f};try{await dbPut(d);L.push(d)}catch(e){toast("Could not save "+f.name)}}
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+if(n)toast("Added "+n+" file"+(n>1?"s":""));render()}
+async function delDoc(id){if(!confirm("Delete this file from the app?"))return;await dbDel(id);L=L.filter(d=>d.id!=id);render()}
+async function openDoc(id){const d=L.find(x=>x.id==id),k=kind(d);const o=document.createElement("div");o.id="rd";
+o.style.cssText="position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)";
+o.innerHTML=`<div class="row" style="padding:12px 16px"><b style="word-break:break-word">${esc(d.name)}</b><button class="btn ghost" onclick="closeDoc()">Close</button></div><div id="rb" style="flex:1;overflow:auto;padding:0 16px"></div>
+<div style="padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="mute">Page</span><input id="pg" type="number" value="${d.pages}" style="width:78px"><span class="mute">of</span><input id="tp" type="number" value="${d.total||""}" style="width:78px"><button class="btn" onclick="saveDoc(${id},false)">Save</button><button class="btn ghost" onclick="saveDoc(${id},true)">Mark done</button></div>`;
+document.body.appendChild(o);const b=$("#rb");
+if(k=="pdf"){b.style.padding="0";b.innerHTML=`<iframe src="${URL.createObjectURL(d.blob)}" style="width:100%;height:100%;border:0"></iframe>`}
+else if(k=="img"){const r=new FileReader();r.onload=()=>b.innerHTML=`<img src="${r.result}" style="width:100%">`;r.readAsDataURL(d.blob)}
+else{b.innerHTML=`<pre style="white-space:pre-wrap;font:16px/1.6 Newsreader,serif"></pre>`;b.firstChild.textContent=await d.blob.text()}}
+function closeDoc(){const o=$("#rd");if(o)o.remove()}
+async function saveDoc(id,done){const d=L.find(x=>x.id==id),old=d.pages;d.pages=+$("#pg").value||0;d.total=+$("#tp").value||0;
+d.status=(done||(d.total&&d.pages>=d.total))?"Done":(d.pages>0?"Reading":d.status);await dbPut(d);
+if(done||d.pages>old){vote();toast("Progress saved · vote cast ⚡")}else toast("Progress saved");closeDoc();render()}
+const TABS=[["home","●","Home"],["study","☰","Syllabus"],["lib","▤","Library"],["focus","◔","Focus"],["prog","▮","Progress"]];
+function go(t){tab=t;render()}
+function render(){const v={home,study,focus,prog,lib}[tab]();$("#app").innerHTML=v;$("#nav").innerHTML=TABS.map(t=>`<button class="${t[0]==tab?"on":""}" onclick="go('${t[0]}')"><b>${t[1]}</b>${t[2]}</button>`).join("");window.scrollTo(0,0)}
+render();
+</script><script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
+}
+</script></body></html>
