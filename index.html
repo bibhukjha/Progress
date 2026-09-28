@@ -3,9 +3,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="RBI Daily">
+<meta name="apple-mobile-web-app-title" content="Daily Progress">
 <link rel="manifest" href="./manifest.webmanifest">
-<title>Progress</title>
+<title>Daily Progress</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
@@ -75,8 +75,11 @@ const ALL=Object.values(SUBJ).flatMap(p=>Object.keys(p));
 // pastel colour per subject, spread around the hue wheel
 const col=s=>`hsl(${(ALL.indexOf(s)*47+220)%360} 60% 76%)`;
 const K="rbi_atoms_v1";
-let S={ident:"an RBI Grade B officer who understands the economy and shows up every day",exam:"",goal:120,done:{},logs:[],voted:{},mocks:[],custom:{}};
-try{Object.assign(S,JSON.parse(localStorage.getItem(K)||"{}"))}catch(e){}
+let S={ident:"",exam:"",goal:"",done:{},logs:[],voted:{},mocks:[],custom:{}};
+try{Object.assign(S,JSON.parse(localStorage.getItem(K)||"{}"));
+if(S.ident==='an RBI Grade B officer who understands the economy and shows up every day')S.ident="";
+if(S.goal===120)S.goal="";
+}catch(e){}
 const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
 const $=s=>document.querySelector(s);
 const ds=d=>{d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
@@ -96,17 +99,17 @@ const ring=(p,id,size,inner)=>{const r=52,c=2*Math.PI*r;return `<div style="posi
 const overall=()=>{const a=ALL.flatMap(s=>tops(s).map(t=>S.done[s+"|"+t]?1:0));return Math.round(a.reduce((x,y)=>x+y,0)/a.length*100)};
 function days(){if(!S.exam)return null;return Math.ceil((new Date(S.exam)-new Date(today()))/864e5)}
 
-function home(){const v=!!S.voted[today()],n=streak(),dd=days(),tm=mins(l=>l.d==today()),goal=S.goal||120;
+function home(){const v=!!S.voted[today()],n=streak(),dd=days(),tm=mins(l=>l.d==today()),goal=Number(S.goal)||0;
 const nudge=NUDGE[Math.floor(new Date()/864e5)%NUDGE.length],sg=suggest(),hr=new Date().getHours();
 const hi=hr<12?"Good morning":hr<17?"Good afternoon":"Good evening";
 // last seven days, oldest first
 let wk="";for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);wk+=`<i class="${S.voted[ds(d)]?"on":""}">${"SMTWTFS"[d.getDay()]}</i>`}
-return `<div class="row"><div><h1>${hi}</h1><div class="mute">${new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"})}</div></div><span class="chip">⚡ ${n}</span></div>
-<div class="hero">${ring(tm/goal,"hr",150,`<div><div class="serif" style="font-size:30px">${fmt(tm)}</div><div style="opacity:.7;font-size:13px">of ${fmt(goal)}</div></div>`)}
-<div style="flex:1;min-width:220px"><div style="opacity:.7;font-size:14px">I am becoming</div><div class="serif" style="font-size:22px;line-height:1.25;margin:4px 0 14px">${S.ident}</div><div class="wk">${wk}</div><div style="margin-top:16px"><button class="btn" onclick="castVote()">${v?"Voted today ✓":"Cast today's vote"}</button></div></div></div>
+return `<div class="row"><div><h1>Daily Progress</h1><div class="mute">${hi} · ${new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"})}</div></div><span class="chip">⚡ ${n}</span></div>
+<div class="hero">${ring(tm/goal,"hr",150,`<div><div class="serif" style="font-size:30px">${fmt(tm)}</div><div style="opacity:.7;font-size:13px">${goal?`of ${fmt(goal)}`:"no daily limit"}</div></div>`)}
+<div style="flex:1;min-width:220px"><div style="opacity:.7;font-size:14px">I am becoming…</div><input aria-label="Your definition" placeholder="Write your own definition…" value="${S.ident.replace(/"/g,"&quot;")}" onchange="S.ident=this.value;save();render()" style="margin:4px 0 14px"><div class="wk">${wk}</div><div style="margin-top:16px"><button class="btn" onclick="castVote()">${v?"Voted today ✓":"Cast today's vote"}</button></div></div></div>
 <div class="g2"><div class="card"><div class="mute">Today's nudge</div><div class="serif" style="font-size:21px;margin:6px 0 12px">${nudge}</div><div class="mute">Least studied this week</div><span class="pill" style="background:${col(sg)};color:#2b2a3a">${sg}</span><div style="margin-top:14px"><button class="btn" onclick="T.subj='${sg}';go('focus')">Start focus</button></div></div>
 <div class="card row" style="text-align:center;align-items:flex-start"><div><div class="big">${dd==null?"—":dd}</div><div class="mute">days to exam</div></div><div><div class="big">${Object.keys(S.voted).length}</div><div class="mute">votes</div></div><div><div class="big">${overall()}%</div><div class="mute">syllabus</div></div></div></div>
-<div class="card"><div class="g2"><div><div class="mute" style="margin-bottom:6px">Exam date</div><input type="date" value="${S.exam}" onchange="S.exam=this.value;save();render()"></div><div><div class="mute" style="margin-bottom:6px">Daily goal (minutes)</div><input type="number" min="15" step="15" value="${goal}" onchange="S.goal=+this.value||120;save();render()"></div></div>
+<div class="card"><div class="g2"><div><div class="mute" style="margin-bottom:6px">Exam date</div><input type="date" value="${S.exam}" onchange="S.exam=this.value;save();render()"></div><div><div class="mute" style="margin-bottom:6px">Daily goal (minutes, optional)</div><input type="number" min="1" step="1" placeholder="No limit" value="${goal||""}" onchange="S.goal=this.value.trim()===""?"":Math.max(1,+this.value||1);save();render()"></div></div>
 <div class="mute" style="margin:14px 0 6px">I am becoming…</div><input value="${S.ident.replace(/"/g,"&quot;")}" onchange="S.ident=this.value;save();render()"></div>`}
 function castVote(){if(S.voted[today()])return toast("Already voted today");vote();toast("Vote cast ⚡");render()}
 
@@ -191,8 +194,14 @@ d.status=(done||(d.total&&d.pages>=d.total))?"Done":(d.pages>0?"Reading":d.statu
 if(done||d.pages>old){vote();toast("Progress saved · vote cast ⚡")}else toast("Progress saved");closeDoc();render()}
 const TABS=[["home","●","Home"],["study","☰","Syllabus"],["lib","▤","Library"],["focus","◔","Focus"],["prog","▮","Progress"]];
 function go(t){tab=t;render()}
-function render(){const v={home,study,focus,prog,lib}[tab]();$("#app").innerHTML=v;$("#nav").innerHTML='<div class="brand">RBI<br>Daily Votes</div>'+TABS.map(t=>`<button class="${t[0]==tab?"on":""}" onclick="go('${t[0]}')"><b>${t[1]}</b>${t[2]}</button>`).join("");window.scrollTo(0,0)}
+function render(){const v={home,study,focus,prog,lib}[tab]();$("#app").innerHTML=v;$("#nav").innerHTML='<div class="brand">Daily<br>Progress</div>'+TABS.map(t=>`<button class="${t[0]==tab?"on":""}" onclick="go('${t[0]}')"><b>${t[1]}</b>${t[2]}</button>`).join("");window.scrollTo(0,0)}
 render();
+// keep tracking parameters out of the app URL
+try{
+  const u=new URL(location.href);
+  const keys=[...u.searchParams.keys()].filter(k=>k.toLowerCase().startsWith("utm_"));
+  if(keys.length){keys.forEach(k=>u.searchParams.delete(k));history.replaceState({},document.title,u.pathname+(u.searchParams.toString()?"?"+u.searchParams.toString():"")+u.hash);}
+}catch(e){}
 // offline support
 if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"));
 </script></body></html>
