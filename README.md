@@ -1,26 +1,31 @@
-# RBI Grade B · Daily Votes
+# RBI Daily
 
-A static study-tracker app designed for GitHub Pages and iPhone Home Screen use.
+A small study tracker I built for RBI Grade B prep. It's one HTML file, no build step and no server, so it runs fine on GitHub Pages.
 
-## Publish on GitHub
+You get a daily vote with a streak, a focus timer that logs your minutes, checklists for Phase 1, Phase 2 and the interview, a library for PDFs and notes, and a progress page with mock scores.
 
-1. Create a new GitHub repository, for example `rbi-daily`.
-2. Upload **all three files**:
-   - `index.html`
-   - `manifest.webmanifest`
-   - `sw.js`
-3. In GitHub, open **Settings → Pages**.
-4. Under **Build and deployment**, choose **Deploy from a branch**.
-5. Select the `main` branch and `/ (root)`, then Save.
-6. GitHub will give you a Pages URL such as:
-   `https://YOUR-USERNAME.github.io/rbi-daily/`
+## Files
 
-## Install on iPhone
+- `index.html` is the whole app
+- `sw.js` caches it so it opens offline
+- `manifest.webmanifest` and the three png files are for the Home Screen icon
 
-1. Open the GitHub Pages URL in **Safari**.
-2. Tap **Share**.
-3. Tap **Add to Home Screen**.
-4. Keep **Open as Web App** enabled if iOS shows that option.
-5. Tap **Add**.
+## Putting it online
 
-Your study data is stored locally in the browser on the device. The Library files are also stored locally on that device, so use the app's **Copy data** backup periodically if the data matters.
+1. Make a repo and upload all six files to the root.
+2. Settings > Pages > deploy from the `main` branch, `/ (root)`.
+3. Open the Pages link in Safari, tap Share, then Add to Home Screen.
+
+## Updating
+
+Upload the new `index.html` over the old one. The page is fetched from the network first, so the change shows up the next time you open it. If the phone still shows the old look, close the app fully and reopen it once or twice.
+
+## Where your data lives
+
+Progress, streaks and scores are in the browser's localStorage. Files from the Library are in IndexedDB. Both stay on the device, and clearing Safari's website data deletes both.
+
+Progress > Copy data gives you a backup of the first kind. It doesn't include library files, so keep your originals somewhere else.
+
+## Not included
+
+No push notifications. Those need a server or a native app.
