@@ -1,12 +1,12 @@
 # Daily Progress
 
-A personal study/progress tracker for GitHub Pages.
+A personal study and progress tracker for GitHub Pages.
 
-This version adds:
+## v5 experience
+- Soft pastel colour diffusion with a 0.3s transition between moods.
 - Tahoma typography throughout.
-- A soft animated pastel background that slowly shifts through bubblegum pink, powder blue, warm yellow, sky pink, lime, mint and turquoise tones.
-- Exact focus-session logging down to seconds, including sessions shorter than one minute.
-- Home-screen “Today by subject” totals.
-- Progress-page subject totals with exact time formatting.
-- User-defined daily goal in minutes, with no fixed upper limit.
-- Blank goal state without a “no daily limit” label.
+- Lightweight glass surfaces with an accessible Glass On/Off control.
+- Splash screen: “Dream big, start small.” with a subtle bubble-burst interaction.
+- Focus sessions log exact seconds by subject, including sessions shorter than one minute.
+- Home and Progress show cumulative time by subject.
+- Mobile scrolling is optimized by reducing expensive blur and preserving scroll position during UI updates.
