@@ -1,8 +1,8 @@
-# RBI Daily
+# Daily Progress App
 
-A small study tracker I built for RBI Grade B prep. It's one HTML file, no build step and no server, so it runs fine on GitHub Pages.
+A small study tracker I built for Exam prep. It's one HTML file, no build step and no server, so it runs fine on GitHub Pages.
 
-You get a daily vote with a streak, a focus timer that logs your minutes, checklists for Phase 1, Phase 2 and the interview, a library for PDFs and notes, and a progress page with mock scores.
+You get a daily vote with a streak, a focus timer that logs your minutes, checklists for exams, a library for PDFs and notes, and a progress page with mock scores.
 
 ## Files
 
