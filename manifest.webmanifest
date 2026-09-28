@@ -3,8 +3,8 @@
   "short_name": "Daily Progress",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#f6f3fb",
-  "theme_color": "#f6f3fb",
+  "background_color": "#fbfafc",
+  "theme_color": "#fbfafc",
   "description": "A simple personal daily progress and study tracker.",
   "icons": [
     {
